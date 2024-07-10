@@ -21,15 +21,23 @@ public static class BetterStackLoggerServiceExtensions
     /// <exception cref="InvalidOperationException">Thrown if the source token is not configured.</exception>
     public static ILoggingBuilder AddBetterStack( this ILoggingBuilder builder, Action<BetterStackLoggingOptions> configure )
     {
+        var options = new BetterStackLoggingOptions();
+
+        configure( options );
+
+        /*
+        Don't set up BetterStack logging if the source token is not configured.
+        */
+        if ( string.IsNullOrEmpty( options.SourceToken ) )
+        {
+            return builder;
+        }
+
         builder.Services.TryAddEnumerable( ServiceDescriptor.Singleton<ILoggerProvider, BetterStackLoggerProvider>() );
         builder.Services.Configure( configure );
 
         builder.Services.AddHttpClient( BetterStackLoggingClient.ClientName, httpClient =>
         {
-            var options = new BetterStackLoggingOptions();
-
-            configure( options );
-
             /*
             The source token is required to send log events.
             */

@@ -7,7 +7,7 @@
     <RootNamespace>BetterStack.Logging</RootNamespace>
     <AssemblyName>faactory.betterstack.logging</AssemblyName>
 
-    <Version>0.1.2</Version>
+    <Version>0.1.3</Version>
     <PackageId>Faactory.BetterStack.Logging</PackageId>
     <Authors>Goncalo Oliveira</Authors>
     <Description>BetterStack Logging for .NET</Description>
