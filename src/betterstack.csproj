@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <RootNamespace>BetterStack.Logging</RootNamespace>
     <AssemblyName>faactory.betterstack.logging</AssemblyName>
+
+    <Version>0.1.2</Version>
     <PackageId>Faactory.BetterStack.Logging</PackageId>
-    <Version>0.1.1</Version>
     <Authors>Goncalo Oliveira</Authors>
     <Description>BetterStack Logging for .NET</Description>
     <RepositoryUrl>https://github.com/goncalo-oliveira/betterstack-logging</RepositoryUrl>

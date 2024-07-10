@@ -34,7 +34,7 @@ internal sealed class BetterStackLoggingClient : IBetterStackLoggingClient
         var logs = logEvents.Select( log =>
         {
             // include the client version with every log event
-            log.Metadata["client.version"] = App.Version;
+            log.Metadata["client.version"] = AppVersion.Value;
 
             foreach ( var kv in metadata )
             {
