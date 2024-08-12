@@ -11,10 +11,12 @@ internal sealed class BetterStackLoggerProvider : ILoggerProvider
 {
     private readonly ILogStack logStack;
     private readonly ConcurrentDictionary<string, ILogger> loggers = new();
+    private readonly IExternalScopeProvider? scopeProvider;
 
     public BetterStackLoggerProvider( IServiceProvider serviceProvider )
     {
         logStack = serviceProvider.GetRequiredService<ILogStack>();
+        scopeProvider = serviceProvider.GetService<IExternalScopeProvider>();
     }
 
     public ILogger CreateLogger( string categoryName )

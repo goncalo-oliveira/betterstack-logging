@@ -9,6 +9,7 @@ internal sealed class BetterStackLogger : ILogger
 {
     private readonly string name;
     private readonly ILogStack stack;
+    private readonly IExternalScopeProvider? scopeProvider;
 
     private static readonly string[] excluded = new[]
     {
@@ -16,16 +17,15 @@ internal sealed class BetterStackLogger : ILogger
         $"System.Net.Http.HttpClient.{BetterStackLoggingClient.ClientName}.",
     };
 
-    public BetterStackLogger( string categoryName, ILogStack logStack )
+    public BetterStackLogger( string categoryName, ILogStack logStack, IExternalScopeProvider? externalScopeProvider = null )
     {
         name = categoryName;
         stack = logStack;
+        scopeProvider = externalScopeProvider;
     }
 
     public IDisposable? BeginScope<TState>( TState state ) where TState : notnull
-    {
-        return default!;
-    }
+        => scopeProvider?.Push( state );
 
     public bool IsEnabled( LogLevel logLevel ) => logLevel > LogLevel.Trace;
 
@@ -54,6 +54,20 @@ internal sealed class BetterStackLogger : ILogger
         {
             metadata["exception.message"] = exception.Message;
             metadata["exception.stacktrace"] = exception.StackTrace ?? string.Empty;
+        }
+
+        /*
+        include scope details if present
+        */
+        var scopeInformation = new System.Text.StringBuilder();
+        scopeProvider?.ForEachScope((scope, state) =>
+        {
+            state.Append($"{scope} => ");
+        }, scopeInformation);
+
+        if ( scopeInformation.Length > 0 )
+        {
+            metadata["scope"] = scopeInformation.ToString();
         }
 
         stack.Add( new LogEvent
