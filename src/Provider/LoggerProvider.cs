@@ -7,23 +7,26 @@ namespace BetterStack.Logging;
 /// <summary>
 /// Represents a logger provider that creates <see cref="BetterStackLogger"/> instances.
 /// </summary>
-internal sealed class BetterStackLoggerProvider : ILoggerProvider
+internal sealed class BetterStackLoggerProvider : ILoggerProvider, ISupportExternalScope
 {
     private readonly ILogStack logStack;
     private readonly ConcurrentDictionary<string, ILogger> loggers = new();
-    private readonly IExternalScopeProvider? scopeProvider;
 
     public BetterStackLoggerProvider( IServiceProvider serviceProvider )
     {
         logStack = serviceProvider.GetRequiredService<ILogStack>();
-        scopeProvider = serviceProvider.GetService<IExternalScopeProvider>();
     }
 
+    public IExternalScopeProvider? ScopeProvider { get; private set; }
+
     public ILogger CreateLogger( string categoryName )
-        => loggers.GetOrAdd( categoryName, name => new BetterStackLogger( name, logStack ) );
+        => loggers.GetOrAdd( categoryName, name => new BetterStackLogger( name, logStack, ScopeProvider ) );
 
     public void Dispose()
     {
         loggers.Clear();
     }
+
+    public void SetScopeProvider( IExternalScopeProvider scopeProvider )
+        => ScopeProvider = scopeProvider;
 }
