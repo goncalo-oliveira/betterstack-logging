@@ -62,7 +62,7 @@ internal sealed class BetterStackLogger : ILogger
         var scopeInformation = new System.Text.StringBuilder();
         scopeProvider?.ForEachScope((scope, state) =>
         {
-            state.Append($"{scope} => ");
+            state.Append( state.Length > 0 ? " | " : "" ).Append( scope );
         }, scopeInformation);
 
         if ( scopeInformation.Length > 0 )
